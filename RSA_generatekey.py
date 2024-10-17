@@ -10,5 +10,11 @@ def is_prime(n: int) -> bool:
             return False
     return True
 
+def gcd(a: int, b: int) -> int:
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+
 
 
