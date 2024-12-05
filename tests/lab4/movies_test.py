@@ -1,3 +1,4 @@
+import os
 import unittest
 from src.lab4.movies import RecommendationSystem
 
@@ -24,6 +25,12 @@ class TestRecommendationSystem(unittest.TestCase):
         user_watched_movies = [1, 2, 3, 4]
         recommendation = self.system.recommend(user_watched_movies)
         self.assertIsNone(recommendation)
+
+    def tearDown(self):
+        if os.path.exists(self.movies_file):
+            os.remove(self.movies_file)
+        if os.path.exists(self.history_file):
+            os.remove(self.history_file)
 
 
 if __name__ == "__main__":
