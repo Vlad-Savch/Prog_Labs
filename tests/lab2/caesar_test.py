@@ -27,5 +27,6 @@ class TestCaesarCipher(unittest.TestCase):
     def test_decrypt_empty(self):
         self.assertEqual(decrypt_caesar(""), "")
 
+
 if __name__ == "__main__":
     unittest.main()

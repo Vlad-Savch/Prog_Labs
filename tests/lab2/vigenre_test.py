@@ -21,5 +21,6 @@ class TestVigenereCipher(unittest.TestCase):
     def test_decrypt_three(self):
         self.assertEqual(decrypt_vigenere("LXFOPVEFRNHR", "LEMON"), "ATTACKATDAWN")
 
+
 if __name__ == "__main__":
     unittest.main()
