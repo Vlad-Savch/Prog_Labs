@@ -1,4 +1,5 @@
 import re
+import os
 from collections import Counter
 
 phone_pattern = re.compile(r'^\+(\d)-(\d{3})-(\d{3})-(\d{2})-(\d{2})$')
@@ -7,6 +8,10 @@ phone_pattern = re.compile(r'^\+(\d)-(\d{3})-(\d{3})-(\d{2})-(\d{2})$')
 def process_orders(input_file, valid_file, invalid_file):
     orders = []
     invalid_orders = []
+
+    input_file = os.path.abspath(input_file)
+    valid_file = os.path.abspath(valid_file)
+    invalid_file = os.path.abspath(invalid_file)
 
     with open(input_file, 'r', encoding='utf-8') as file:
         for line in file:
@@ -68,4 +73,27 @@ def process_orders(input_file, valid_file, invalid_file):
 
                 orders.append((order_id, formatted_products, full_name, region_city_street, phone, priority, country))
 
+    russia_orders = [order for order in orders if order[6] == "Россия"]
+    other_orders = [order for order in orders if order[6] != "Россия"]
 
+    russia_orders.sort(key=lambda x: (x[6], ['MAX', 'MIDDLE', 'LOW'].index(x[5])))
+    other_orders.sort(key=lambda x: (x[6], ['MAX', 'MIDDLE', 'LOW'].index(x[5])))
+
+    sorted_orders = russia_orders + other_orders
+
+    with open(valid_file, 'w', encoding='utf-8') as file:
+        for order in sorted_orders:
+            order_id, formatted_products, full_name, address, phone, priority, country = order
+            file.write(f"{order_id};{formatted_products};{full_name};{address};{phone};{priority}\n")
+
+    with open(invalid_file, 'w', encoding='utf-8') as file:
+        for error in invalid_orders:
+            file.write(f"{error}\n")
+
+
+if __name__ == "__main__":
+    input_file = 'orders.txt'
+    valid_file = 'order_country.txt'
+    invalid_file = 'non_valid_orders.txt'
+
+    process_orders(input_file, valid_file, invalid_file)
